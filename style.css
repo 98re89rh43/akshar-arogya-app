@@ -62,59 +62,35 @@ body {
 
 
   /*code for matching game*/
-  // Words for the game (you can add more words as needed)
-const words = [
-  'सेब', 'केला', 'बिल्ली', 'कुत्ता', 'हाथी', 'मेंढक', 'जिराफ', 'घोड़ा', 'इग्वाना', 'जेलीफिश'
-];
-
-// Score variable
-let score = 0;
-
-// Function to start the game
-function startGame() {
-  const cardsContainer = document.getElementById('cards');
-  cardsContainer.innerHTML = ''; // Clear previous cards
-  score = 0; // Reset the score
-
-  // Update the displayed score
-  updateScore();
-
-  // Shuffle the words array
-  const shuffledWords = words.sort(() => Math.random() - 0.5);
-
-  // Display cards with words
-  shuffledWords.forEach(word => {
-    const card = document.createElement('div');
-    card.classList.add('card');
-    card.textContent = word;
-    card.addEventListener('click', () => pronounceWord(word));
-    cardsContainer.appendChild(card);
-  });
+  /* Styles for the game */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #3494e6, #ec6ead);
 }
 
-// Function to recognize the spoken word
-function pronounceWord(word) {
-  const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition || window.mozSpeechRecognition || window.msSpeechRecognition)();
-  recognition.lang = 'hi-IN';
-
-  recognition.onresult = function(event) {
-    const result = event.results[0][0].transcript.toLowerCase();
-    const resultDisplay = document.getElementById('result');
-
-    if (result === word.toLowerCase()) {
-      resultDisplay.textContent = 'सही'; // Display 'सही' for correct pronunciation
-      score++; // Increment score for correct pronunciation
-      updateScore(); // Update the displayed score
-    } else {
-      resultDisplay.textContent = 'गलत'; // Display 'गलत' for incorrect pronunciation
-    }
-  }
-
-  recognition.start();
+.game-container {
+  text-align: center;
+  margin-top: 50px;
+  color: white;
 }
 
-// Function to update the score display
-function updateScore() {
-  const scoreDisplay = document.getElementById('score');
-  scoreDisplay.textContent = score;
+.scoreboard {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.cards {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.card {
+  border: 1px solid #fff;
+  margin: 10px;
+  padding: 20px;
+  cursor: pointer;
 }
