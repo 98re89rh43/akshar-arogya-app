@@ -1,0 +1,120 @@
+/*code for home and login page*/
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
+  }
+  
+  .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  .login-box {
+    background-color: yellow;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  .yellow-button {
+    background-color: yellow;
+    color: #000;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .yellow-button:hover {
+    background-color: #e0e000;
+  }
+  
+  .purple-button {
+    background-color: purple;
+    color: #fff;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .purple-button:hover {
+    background-color: #6a0080;
+  }
+  
+  .pink-button {
+    background-color: pink;
+    color: #fff;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .pink-button:hover {
+    background-color: #ff1493;
+  }
+
+
+  /*code for matching game*/
+  // Words for the game (you can add more words as needed)
+const words = [
+  'सेब', 'केला', 'बिल्ली', 'कुत्ता', 'हाथी', 'मेंढक', 'जिराफ', 'घोड़ा', 'इग्वाना', 'जेलीफिश'
+];
+
+// Score variable
+let score = 0;
+
+// Function to start the game
+function startGame() {
+  const cardsContainer = document.getElementById('cards');
+  cardsContainer.innerHTML = ''; // Clear previous cards
+  score = 0; // Reset the score
+
+  // Update the displayed score
+  updateScore();
+
+  // Shuffle the words array
+  const shuffledWords = words.sort(() => Math.random() - 0.5);
+
+  // Display cards with words
+  shuffledWords.forEach(word => {
+    const card = document.createElement('div');
+    card.classList.add('card');
+    card.textContent = word;
+    card.addEventListener('click', () => pronounceWord(word));
+    cardsContainer.appendChild(card);
+  });
+}
+
+// Function to recognize the spoken word
+function pronounceWord(word) {
+  const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition || window.mozSpeechRecognition || window.msSpeechRecognition)();
+  recognition.lang = 'hi-IN';
+
+  recognition.onresult = function(event) {
+    const result = event.results[0][0].transcript.toLowerCase();
+    const resultDisplay = document.getElementById('result');
+
+    if (result === word.toLowerCase()) {
+      resultDisplay.textContent = 'सही'; // Display 'सही' for correct pronunciation
+      score++; // Increment score for correct pronunciation
+      updateScore(); // Update the displayed score
+    } else {
+      resultDisplay.textContent = 'गलत'; // Display 'गलत' for incorrect pronunciation
+    }
+  }
+
+  recognition.start();
+}
+
+// Function to update the score display
+function updateScore() {
+  const scoreDisplay = document.getElementById('score');
+  scoreDisplay.textContent = score;
+}
