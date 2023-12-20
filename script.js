@@ -16,7 +16,7 @@ function submitLogin() {
   }
   
   function openLibrary() {
-    alert('Library button clicked. Implement your logic here.');
+    
   }
   
   function openInteractiveExercise() {

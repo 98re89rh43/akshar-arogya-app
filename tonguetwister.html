@@ -1,0 +1,125 @@
+<!--code for tonguetwister game-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Interactive Exercises</title>
+</head>
+
+<body>
+
+    <div class="exercise-icon" id="exerciseIcon">
+        <img src="exercise_icon.png" alt="Exercise Icon">
+    </div>
+
+    <div class="buttons-container">
+        <button onclick="showTongueTwisters()">Vocal Exercises</button>
+    </div>
+
+    <div class="tongue-twisters" id="tongueTwistersContainer">
+        <!-- Tongue twisters will be displayed here dynamically -->
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Pronunciation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+
+        #entry {
+            width: 300px;
+            padding: 5px;
+            font-size: 16px;
+        }
+
+        #pronounceButton {
+            padding: 8px 16px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Word Pronunciation</h1>
+
+    <input type="text" id="entry" placeholder="Enter a word" value="लिखिये">
+
+    <button id="pronounceButton" onclick="pronounceWord()">Pronounce</button>
+
+    <script>
+        function pronounceWord() {
+            var word = document.getElementById("entry").value;
+            var audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+            // Function to convert text to speech
+            function textToSpeech(text, callback) {
+                var msg = new SpeechSynthesisUtterance();
+                msg.text = text;
+                msg.lang = 'hi-IN'; // Language code for Hindi (India)
+
+                msg.onend = function () {
+                    callback();
+                };
+
+                window.speechSynthesis.speak(msg);
+            }
+
+            // Function to convert speech to audio buffer
+            function speechToBuffer(text, callback) {
+                var utterance = new SpeechSynthesisUtterance();
+                utterance.text = text;
+                utterance.lang = 'hi-IN'; // Language code for Hindi (India)
+
+                var synth = window.speechSynthesis;
+                var audioBuffer;
+
+                var utteranceEventHandler = function (event) {
+                    var audioData = new Uint8Array(event.renderedBuffer.getChannelData(0));
+                    audioBuffer = audioContext.createBuffer(1, audioData.length, audioContext.sampleRate);
+                    audioBuffer.getChannelData(0).set(audioData);
+                    callback(audioBuffer);
+                };
+
+                utterance.addEventListener('end', function () {
+                    synth.removeEventListener('utteranceend', utteranceEventHandler);
+                });
+
+                synth.addEventListener('utteranceend', utteranceEventHandler);
+                synth.speak(utterance);
+            }
+
+            // Play the audio buffer
+            function playAudioBuffer(buffer) {
+                var source = audioContext.createBufferSource();
+                source.buffer = buffer;
+                source.connect(audioContext.destination);
+                source.start(0);
+            }
+
+            // Main process
+            textToSpeech(word, function () {
+                speechToBuffer(word, function (buffer) {
+                    playAudioBuffer(buffer);
+                });
+            });
+        }
+    </script>
+</body>
+
+</html>
