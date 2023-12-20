@@ -1,0 +1,47 @@
+<DOCTYPE html>
+    <html>
+
+    <head>
+        <title>Voice to Text Converter</title>
+        <h1>Voice to Text Converter</h1>
+        <button id="startButton">Start Listening</button>
+        <p id="output"></p>
+
+        <script>
+            // Check if the browser supports the Web Speech API
+            if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
+                // Create a new SpeechRecognition object
+                var recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+
+                recognition.lang = 'hi-IN'; // Set language to US English
+
+                // Get elements
+                var startButton = document.getElementById('startButton');
+                var output = document.getElementById('output');
+
+                // Function to handle recognition results
+                recognition.onresult = function (event) {
+                    var transcript = event.results[ 0 ][ 0 ].transcript; // Get the recognized text
+                    output.textContent = "आपने कहा: " + transcript;
+                }
+
+                // Function to handle recognition errors
+                recognition.onerror = function (event) {
+                    console.error('Speech recognition error detected: ' + event.error);
+                }
+
+                // Function to start listening
+                function startListening() {
+                    recognition.start(); // Start listening
+                    startButton.textContent = "Listening...";
+                }
+
+                // Event listener for the button click
+                startButton.addEventListener('click', startListening);
+            } else {
+                alert('Speech recognition not supported in this browser.');
+            }
+        </script>
+        </body>
+
+    </html>
